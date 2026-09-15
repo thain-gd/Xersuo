@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "XersuoCharacter.h"
+#include "XersuoPlayerState.h"
+#include "AbilitySystemComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -45,6 +47,32 @@ AXersuoCharacter::AXersuoCharacter()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+}
+
+UAbilitySystemComponent* AXersuoCharacter::GetAbilitySystemComponent() const
+{
+	const AXersuoPlayerState* XersuoPlayerState = GetPlayerState<AXersuoPlayerState>();
+	return XersuoPlayerState ? XersuoPlayerState->GetAbilitySystemComponent() : nullptr;
+}
+
+void AXersuoCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitializeAbilitySystem();
+}
+
+void AXersuoCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitializeAbilitySystem();
+}
+
+void AXersuoCharacter::InitializeAbilitySystem()
+{
+	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	{
+		ASC->InitAbilityActorInfo(GetPlayerState<AXersuoPlayerState>(), this);
+	}
 }
 
 void AXersuoCharacter::BeginPlay()

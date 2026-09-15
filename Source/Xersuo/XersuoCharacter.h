@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
 #include "XersuoCharacter.generated.h"
 
@@ -13,7 +14,7 @@ class USpringArmComponent;
  *  A controllable top-down perspective character
  */
 UCLASS(abstract)
-class AXersuoCharacter : public ACharacter
+class AXersuoCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -32,6 +33,10 @@ public:
 	/** Constructor */
 	AXersuoCharacter();
 
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
 	/** Initialization */
 	virtual void BeginPlay() override;
 
@@ -43,6 +48,10 @@ public:
 
 	/** Returns the Camera Boom component **/
 	USpringArmComponent* GetCameraBoom() const { return CameraBoom.Get(); }
+
+private:
+	/** Connects the persistent ability system to this pawn on server and clients. */
+	void InitializeAbilitySystem();
 
 };
 

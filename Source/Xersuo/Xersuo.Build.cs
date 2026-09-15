@@ -20,10 +20,11 @@ public class Xersuo : ModuleRules
 			"GameplayStateTreeModule",
 			"Niagara",
 			"UMG",
-			"Slate"
+			"Slate",
+			"GameplayAbilities",
+			"GameplayTags",
+			"GameplayTasks"
 		});
-
-		PrivateDependencyModuleNames.AddRange(new string[] { "GameplayAbilities","GameplayTags", "GameplayTasks" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"Xersuo",
