@@ -54,6 +54,8 @@ public:
 
 	/** Constructor */
 	AXersuoPlayerController();
+	
+	virtual void PlayerTick(float DeltaTime) override;
 
 protected:
 
@@ -66,6 +68,12 @@ protected:
 
 	/** Helper function to get the move destination */
 	void UpdateCachedDestination();
+	
+private:
+	void ProcessCursorTrace();
+	void SetHoveredActorHighlight(bool bEnabled) const;
+	
+	TWeakObjectPtr<AActor> CurrentHoveredActor;
 };
 
 

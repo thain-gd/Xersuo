@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "XersuoCharacter.generated.h"
 
+class UHighlightComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -27,6 +28,9 @@ private:
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> CameraBoom;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHighlightComponent> HighlightComponent;
 
 public:
 

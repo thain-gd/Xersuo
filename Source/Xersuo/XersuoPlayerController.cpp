@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "Xersuo.h"
+#include "Visual/HighlightComponent.h"
 
 AXersuoPlayerController::AXersuoPlayerController()
 {
@@ -24,6 +25,13 @@ AXersuoPlayerController::AXersuoPlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
+}
+
+void AXersuoPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	
+	ProcessCursorTrace();
 }
 
 void AXersuoPlayerController::SetupInputComponent()
@@ -102,4 +110,35 @@ void AXersuoPlayerController::UpdateCachedDestination()
 	{
 		CachedDestination = Hit.Location;
 	}
+}
+
+void AXersuoPlayerController::ProcessCursorTrace()
+{
+	FHitResult Hit;
+	if (GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel1), false, Hit))
+	{
+		AActor* HitActor = Hit.GetActor();
+		if (CurrentHoveredActor == nullptr || CurrentHoveredActor != HitActor)
+		{
+			if (CurrentHoveredActor != nullptr)
+			{
+				SetHoveredActorHighlight(false);
+			}
+			
+			CurrentHoveredActor = HitActor;
+			SetHoveredActorHighlight(true);
+		}
+	}
+	else if (CurrentHoveredActor != nullptr)
+	{
+		SetHoveredActorHighlight(false);
+		CurrentHoveredActor = nullptr;
+	}
+}
+
+void AXersuoPlayerController::SetHoveredActorHighlight(bool bEnabled) const
+{
+	UHighlightComponent* HighlightComponent = CurrentHoveredActor->GetComponentByClass<UHighlightComponent>();
+	check(HighlightComponent);
+	HighlightComponent->SetHighlightEnabled(bEnabled);
 }
