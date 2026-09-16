@@ -13,6 +13,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 #include "Xersuo.h"
+#include "Collision/CollisionChannels.h"
 #include "Visual/HighlightComponent.h"
 
 AXersuoPlayerController::AXersuoPlayerController()
@@ -114,8 +115,22 @@ void AXersuoPlayerController::UpdateCachedDestination()
 
 void AXersuoPlayerController::ProcessCursorTrace()
 {
+	FVector Origin;
+	FVector Direction;
+	if (!DeprojectMousePositionToWorld(Origin, Direction))
+	{
+		return;
+	}
+	
+	FCollisionQueryParams Params;
+	Params.bTraceComplex = false;
+	if (APawn* OwnPawn = GetPawn())
+	{
+		Params.AddIgnoredActor(OwnPawn);
+	}
+	
 	FHitResult Hit;
-	if (GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_GameTraceChannel1), false, Hit))
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Origin, Origin + Direction * HitResultTraceDistance, XersuoCollision::Targeting, Params))
 	{
 		AActor* HitActor = Hit.GetActor();
 		if (CurrentHoveredActor == nullptr || CurrentHoveredActor != HitActor)
