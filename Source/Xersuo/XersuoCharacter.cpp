@@ -62,6 +62,11 @@ void AXersuoCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitializeAbilitySystem();
+
+	if (AXersuoPlayerState* XersuoPlayerState = GetPlayerState<AXersuoPlayerState>())
+	{
+		XersuoPlayerState->InitializeChampionStats();
+	}
 }
 
 void AXersuoCharacter::OnRep_PlayerState()
