@@ -8,6 +8,7 @@
 #include "XersuoPlayerState.generated.h"
 
 class UAbilitySystemComponent;
+class UHealthAttributeSet;
 
 /** Owns the champion's ability system so it persists across pawn respawns. */
 UCLASS()
@@ -23,4 +24,7 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHealthAttributeSet> HealthAttributeSet;
 };
