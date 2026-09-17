@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "XersuoGameMode.generated.h"
 
+struct FChampionDataRow;
 /**
  *  Simple Game Mode for a top-down perspective game
  *  Sets the default gameplay framework classes
@@ -17,9 +18,15 @@ class AXersuoGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-
 	/** Constructor */
 	AXersuoGameMode();
+	
+	virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override;
+	
+	const FChampionDataRow* FindChampionStats(FName ChampionId) const;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Champions")
+	TObjectPtr<UDataTable> ChampionStatsTable;
 };
 
 
