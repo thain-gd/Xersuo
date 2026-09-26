@@ -14,6 +14,8 @@ AXersuoPlayerState::AXersuoPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("HealthAttributeSet"));
+	
+	SetNetUpdateFrequency(30.f);
 }
 
 UAbilitySystemComponent* AXersuoPlayerState::GetAbilitySystemComponent() const
