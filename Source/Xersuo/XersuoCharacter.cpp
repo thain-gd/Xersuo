@@ -13,6 +13,8 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 #include "Visual/HighlightComponent.h"
+#include "Components/WidgetComponent.h"
+#include "HUD/FollowingStatusHUD.h"
 
 AXersuoCharacter::AXersuoCharacter()
 {
@@ -48,6 +50,10 @@ AXersuoCharacter::AXersuoCharacter()
 	
 	HighlightComponent = CreateDefaultSubobject<UHighlightComponent>(TEXT("HighlightComponent"));
 
+	FollowingStatusWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("FollowingStatusWidget"));
+	FollowingStatusWidget->SetupAttachment(GetRootComponent());
+	FollowingStatusWidget->SetWidgetSpace(EWidgetSpace::Screen);
+	
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -82,13 +88,36 @@ void AXersuoCharacter::InitializeAbilitySystem()
 	{
 		ASC->InitAbilityActorInfo(GetPlayerState<AXersuoPlayerState>(), this);
 	}
+
+	if (HasActorBegunPlay())
+	{
+		InitializeFollowingStatusHUD();
+	}
+}
+
+void AXersuoCharacter::InitializeFollowingStatusHUD()
+{
+	if (GetNetMode() == NM_DedicatedServer)
+	{
+		return;
+	}
+
+	FollowingStatusWidget->InitWidget();
+	if (UFollowingStatusHUD* StatusHUD = Cast<UFollowingStatusHUD>(FollowingStatusWidget->GetUserWidgetObject()))
+	{
+		StatusHUD->SetAbilitySystemComponent(GetAbilitySystemComponent());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("FollowingStatusHUD Init Failed"));
+	}
 }
 
 void AXersuoCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// stub
+	InitializeFollowingStatusHUD();
 }
 
 void AXersuoCharacter::Tick(float DeltaSeconds)

@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "XersuoCharacter.generated.h"
 
+class UWidgetComponent;
 class UHighlightComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -31,6 +32,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UHighlightComponent> HighlightComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Compoenents")
+	TObjectPtr<UWidgetComponent> FollowingStatusWidget;
 
 public:
 
@@ -56,6 +60,9 @@ public:
 private:
 	/** Connects the persistent ability system to this pawn on server and clients. */
 	void InitializeAbilitySystem();
+
+	/** Initialize the following status widget and set its ASC with this champion's ASC */
+	void InitializeFollowingStatusHUD();
 
 };
 
