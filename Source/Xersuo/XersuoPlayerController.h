@@ -11,6 +11,7 @@ class UNiagaraSystem;
 class UInputMappingContext;
 class UInputAction;
 class UPathFollowingComponent;
+class UGameplayAbility;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -44,6 +45,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> SetDestinationClickAction;
 
+	/** Shared normal attack implementation, granted on the server when first needed. */
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	TSubclassOf<UGameplayAbility> NormalAttackAbility;
+
 	/** Saved location of the character movement destination */
 	FVector CachedDestination;
 
@@ -56,6 +61,8 @@ public:
 	AXersuoPlayerController();
 	
 	virtual void PlayerTick(float DeltaTime) override;
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
 
@@ -70,6 +77,36 @@ protected:
 	void UpdateCachedDestination();
 	
 private:
+	UFUNCTION(Server, Reliable)
+	void ServerCancelAttack();
+
+	UFUNCTION(Server, Reliable)
+	void ServerProcessNormalAttack(AActor* Target);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReadyToAttack();
+	
+	UFUNCTION(Client, Reliable)
+	void ClientStartAttackMovement(AActor* Target, APawn* OrderPawn, float AttackRange);
+
+	UFUNCTION(Client, Reliable)
+	void ClientStopAttackMovement();
+
+	void CheckForNormalAttack();
+	void UpdateClientAttackApproach();
+	bool MoveIntoAttackRange(AActor* Target, float AttackRange);
+	void CancelAttack();
+	void StopAttackMovement();
+
+	UPROPERTY(Replicated)
+	bool bMovingToAttack = false;
+	
+	UPROPERTY(Replicated)
+	bool bIsAttacking = false;
+	
+	TWeakObjectPtr<AActor> CurrentAttackTarget;
+	float ClientAttackRange = 0.f;
+
 	void ProcessCursorTrace();
 	void SetHoveredActorHighlight(bool bEnabled) const;
 	

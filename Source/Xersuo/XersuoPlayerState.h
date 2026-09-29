@@ -7,8 +7,10 @@
 #include "GameFramework/PlayerState.h"
 #include "XersuoPlayerState.generated.h"
 
+class UNormalAttackConfig;
 class UAbilitySystemComponent;
 class UHealthAttributeSet;
+class UBaseStatsAttributeSet;
 
 /** Owns the champion's ability system so it persists across pawn respawns. */
 UCLASS()
@@ -23,8 +25,12 @@ public:
 	
 	FName GetSelectedChampionId() const { return SelectedChampionId; }
 
-	/** Initializes level-one health on the server after the ASC has an avatar. */
-	void InitializeChampionStats();
+	/** Initializes level-one champion stats and attack configuration on the server after the ASC has an avatar. */
+	void InitializeChampionData();
+	
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	UNormalAttackConfig* GetNormalAttackConfig() const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
@@ -32,10 +38,16 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UHealthAttributeSet> HealthAttributeSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UBaseStatsAttributeSet> BaseStatsAttributeSet;
 	
 	// TODO: Replace this with the proper selected champion id from the lobby
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Champion", meta = (AllowPrivateAccess = "true"))
 	FName SelectedChampionId = TEXT("Phase");
 
-	bool bChampionHealthInitialized = false;
+	UPROPERTY(Replicated)
+	TObjectPtr<UNormalAttackConfig> NormalAttackConfig = nullptr;
+	
+	bool bChampionDataInitialized = false;
 };

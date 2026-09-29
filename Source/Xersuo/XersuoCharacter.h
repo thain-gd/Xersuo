@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Projectile/AttackTargetInterface.h"
 #include "XersuoCharacter.generated.h"
 
 class UWidgetComponent;
@@ -16,7 +17,7 @@ class USpringArmComponent;
  *  A controllable top-down perspective character
  */
 UCLASS(abstract)
-class AXersuoCharacter : public ACharacter, public IAbilitySystemInterface
+class AXersuoCharacter : public ACharacter, public IAbilitySystemInterface, public IAttackTargetInterface
 {
 	GENERATED_BODY()
 
@@ -48,8 +49,7 @@ public:
 	/** Initialization */
 	virtual void BeginPlay() override;
 
-	/** Update */
-	virtual void Tick(float DeltaSeconds) override;
+	virtual FVector GetProjectileTargetLocation() const override;
 
 	/** Returns the camera component **/
 	UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent.Get(); }

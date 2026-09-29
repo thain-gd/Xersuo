@@ -6,6 +6,8 @@
 
 #include "ChampionDataRow.generated.h"
 
+class UNormalAttackConfig;
+
 USTRUCT(BlueprintType)
 struct FChampionDataRow : public FTableRowBase
 {
@@ -15,13 +17,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText DisplayName;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AXersuoCharacter> CharacterClass;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FChampionBaseStat MaxHealth;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FChampionBaseStat AttackDamage;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UNormalAttackConfig> NormalAttackConfig = nullptr;
 };
 

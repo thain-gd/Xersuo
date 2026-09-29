@@ -127,3 +127,4 @@ DerivedDataCache/*
 # Codex
 Docs/*
 .codex/
+AGENTS.md

@@ -72,7 +72,7 @@ void AXersuoCharacter::PossessedBy(AController* NewController)
 
 	if (AXersuoPlayerState* XersuoPlayerState = GetPlayerState<AXersuoPlayerState>())
 	{
-		XersuoPlayerState->InitializeChampionStats();
+		XersuoPlayerState->InitializeChampionData();
 	}
 }
 
@@ -118,11 +118,15 @@ void AXersuoCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	InitializeFollowingStatusHUD();
+	
+	// Allow sockets to be updated so that spawning objects using sockets work properly, e.g., projectiles spawned from hands
+	if (HasAuthority())
+	{
+		GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+	}
 }
 
-void AXersuoCharacter::Tick(float DeltaSeconds)
+FVector AXersuoCharacter::GetProjectileTargetLocation() const
 {
-    Super::Tick(DeltaSeconds);
-
-	// stub
+	return GetMesh()->GetSocketLocation(TEXT("ProjectileImpact"));
 }
