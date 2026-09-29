@@ -182,14 +182,14 @@ void AXersuoPlayerController::StopAttackMovement()
 
 void AXersuoPlayerController::CancelAttack()
 {
+	bIsAttacking = false;
+	bMovingToAttack = false;
+	CurrentAttackTarget.Reset();
+	
 	if (HasAuthority() && !IsLocalController())
 	{
 		ClientStopAttackMovement();
 	}
-	
-	bIsAttacking = false;
-	bMovingToAttack = false;
-	CurrentAttackTarget.Reset();
 }
 
 void AXersuoPlayerController::ServerProcessNormalAttack_Implementation(AActor* Target)
@@ -274,6 +274,7 @@ void AXersuoPlayerController::CheckForNormalAttack()
 		return;
 	}
 
+	bMovingToAttack = false;
 	// An attack order must execute on the server, never forward activation to an untrusted client.
 	const UGameplayAbility* AbilityDefaults = NormalAttackAbility->GetDefaultObject<UGameplayAbility>();
 	if (AbilityDefaults->GetNetExecutionPolicy() != EGameplayAbilityNetExecutionPolicy::ServerOnly
@@ -332,8 +333,6 @@ bool AXersuoPlayerController::MoveIntoAttackRange(AActor* Target, float AttackRa
 	}
 	Result.Path->SetGoalActorObservation(*Target, 25.f);
 	FAIMoveRequest Request(Target);
-	// Stop slightly inside the range; exclude collision radii from the distance calculation.
-	Request.SetAcceptanceRadius(FMath::Max(0.f, AttackRange - 5.f));
 	Request.SetReachTestIncludesAgentRadius(false);
 	Request.SetReachTestIncludesGoalRadius(false);
 	StopMovement();
@@ -352,7 +351,6 @@ void AXersuoPlayerController::UpdateCachedDestination()
 
 void AXersuoPlayerController::ServerReadyToAttack_Implementation()
 {
-	bMovingToAttack = false;
 	CheckForNormalAttack();
 }
 
