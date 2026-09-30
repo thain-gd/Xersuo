@@ -35,25 +35,25 @@ AXersuoPlayerController::AXersuoPlayerController()
 	NormalAttackAbility = UNormalAttack::StaticClass();
 }
 
+void AXersuoPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (HasAuthority() && bIsAttacking)
+	{
+		CheckForNormalAttack();
+	}
+}
+
 void AXersuoPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 	
-	if (IsLocalController())
+	ProcessCursorTrace();
+
+	if (bIsAttacking && bMovingToAttack)
 	{
-		ProcessCursorTrace();
-	}
-	
-	if (bIsAttacking)
-	{
-		if (IsLocalController() && bMovingToAttack)
-		{
-			UpdateClientAttackApproach();
-		}
-		else if (HasAuthority())
-		{
-			CheckForNormalAttack();
-		}
+		UpdateClientAttackApproach();
 	}
 }
 
@@ -107,10 +107,7 @@ void AXersuoPlayerController::OnInputStarted()
 	}
 	else
 	{
-		if (bIsAttacking)
-		{
-			ServerCancelAttack();
-		}
+		ServerCancelAttack();
 		
 		// Update the move destination to wherever the cursor is pointing at
     	UpdateCachedDestination();
@@ -155,7 +152,6 @@ void AXersuoPlayerController::OnSetDestinationReleased()
 
 void AXersuoPlayerController::ServerCancelAttack_Implementation()
 {
-	bIsAttacking = false;
 	CancelAttack();
 
 	const AXersuoPlayerState* ChampionState = GetPlayerState<AXersuoPlayerState>();
@@ -199,7 +195,7 @@ void AXersuoPlayerController::ServerProcessNormalAttack_Implementation(AActor* T
 		return;
 	}
 	
-	CancelAttack();
+	ServerCancelAttack();
 	bIsAttacking = true;
 	CurrentAttackTarget = Target;
 	CheckForNormalAttack();

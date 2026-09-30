@@ -60,6 +60,7 @@ public:
 	/** Constructor */
 	AXersuoPlayerController();
 	
+	virtual void Tick(float DeltaTime) override;
 	virtual void PlayerTick(float DeltaTime) override;
 	
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
