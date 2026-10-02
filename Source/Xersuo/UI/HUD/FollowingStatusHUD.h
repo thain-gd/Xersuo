@@ -7,10 +7,9 @@
 #include "FollowingStatusHUD.generated.h"
 
 class UBorder;
-class UProgressBar;
+class UAttributeBar;
 class UTextBlock;
 class UAbilitySystemComponent;
-struct FOnAttributeChangeData;
 
 // A widget for the HUD status (health, mana/energy, level) that follows champions around
 UCLASS()
@@ -19,14 +18,11 @@ class XERSUO_API UFollowingStatusHUD : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	/** Display this champion's attributes; passing null disconnects and clears the bar. */
+	/** Bind both bars to the first non-null ability system component. */
 	UFUNCTION(BlueprintCallable, Category = "Status")
 	void SetAbilitySystemComponent(UAbilitySystemComponent* InAbilitySystemComponent);
 
 protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-
 	UPROPERTY(BlueprintReadOnly, Category = "Status", meta = (BindWidget))
 	TObjectPtr<UBorder> LevelBorder;
 
@@ -34,17 +30,8 @@ protected:
 	TObjectPtr<UTextBlock> LevelText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status", meta = (BindWidget))
-	TObjectPtr<UProgressBar> HealthBar;
+	TObjectPtr<UAttributeBar> HealthBar;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status", meta = (BindWidget))
-	TObjectPtr<UProgressBar> EnergyBar;
-
-private:
-	void UnbindHealthDelegates();
-	void OnHealthAttributeChanged(const FOnAttributeChangeData& Data) const;
-	void RefreshHealthBar() const;
-
-	TWeakObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-	FDelegateHandle HealthChangedHandle;
-	FDelegateHandle MaxHealthChangedHandle;
+	TObjectPtr<UAttributeBar> EnergyBar;
 };

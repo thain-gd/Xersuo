@@ -1,4 +1,4 @@
-#include "HUD/PerformanceHUD.h"
+#include "UI/HUD/PerformanceHUD.h"
 
 #include "Components/TextBlock.h"
 #include "GameFramework/PlayerState.h"

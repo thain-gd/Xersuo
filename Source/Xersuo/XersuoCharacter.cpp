@@ -5,7 +5,6 @@
 #include "AbilitySystemComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
-#include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -14,7 +13,8 @@
 #include "Engine/World.h"
 #include "Visual/HighlightComponent.h"
 #include "Components/WidgetComponent.h"
-#include "HUD/FollowingStatusHUD.h"
+#include "UI/HUD/FollowingStatusHUD.h"
+#include "UI/HUD/XersuoHUD.h"
 
 AXersuoCharacter::AXersuoCharacter()
 {
@@ -82,11 +82,18 @@ void AXersuoCharacter::OnRep_PlayerState()
 	InitializeAbilitySystem();
 }
 
+void AXersuoCharacter::OnRep_Controller()
+{
+	Super::OnRep_Controller();
+	InitializePlayerHUD();
+}
+
 void AXersuoCharacter::InitializeAbilitySystem()
 {
 	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{
 		ASC->InitAbilityActorInfo(GetPlayerState<AXersuoPlayerState>(), this);
+		InitializePlayerHUD();
 	}
 
 	if (HasActorBegunPlay())
@@ -95,7 +102,25 @@ void AXersuoCharacter::InitializeAbilitySystem()
 	}
 }
 
-void AXersuoCharacter::InitializeFollowingStatusHUD()
+void AXersuoCharacter::InitializePlayerHUD() const
+{
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if (!ASC)
+	{
+		return;
+	}
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController && PlayerController->IsLocalController())
+	{
+		if (AXersuoHUD* HUD = PlayerController->GetHUD<AXersuoHUD>())
+		{
+			HUD->SetAbilitySystemComponent(ASC);
+		}
+	}
+}
+
+void AXersuoCharacter::InitializeFollowingStatusHUD() const
 {
 	if (GetNetMode() == NM_DedicatedServer)
 	{

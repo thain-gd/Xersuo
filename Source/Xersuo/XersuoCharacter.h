@@ -45,6 +45,7 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+	virtual void OnRep_Controller() override;
 
 	/** Initialization */
 	virtual void BeginPlay() override;
@@ -60,9 +61,10 @@ public:
 private:
 	/** Connects the persistent ability system to this pawn on server and clients. */
 	void InitializeAbilitySystem();
+	void InitializePlayerHUD() const;
 
 	/** Initialize the following status widget and set its ASC with this champion's ASC */
-	void InitializeFollowingStatusHUD();
+	void InitializeFollowingStatusHUD() const;
 
 };
 
