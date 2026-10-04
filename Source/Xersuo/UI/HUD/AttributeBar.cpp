@@ -2,6 +2,22 @@
 
 #include "AbilitySystemComponent.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+
+void UAttributeBar::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	if (Bar)
+	{
+		Bar->SetFillColorAndOpacity(FLinearColor(FillColor));
+	}
+	
+	if (ValueText)
+	{
+		ValueText->SetVisibility(bShowValueText ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Collapsed);
+	}
+}
 
 void UAttributeBar::SetAbilitySystemComponent(UAbilitySystemComponent* InAbilitySystemComponent)
 {
@@ -50,10 +66,15 @@ void UAttributeBar::RefreshBar() const
 		return;
 	}
 
+	const bool bShouldUpdateValueText = bShowValueText && ValueText;
 	const UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
 	if (!ASC || !ASC->HasAttributeSetForAttribute(CurrentAttribute) || !ASC->HasAttributeSetForAttribute(MaxAttribute))
 	{
 		Bar->SetPercent(0.f);
+		if (bShouldUpdateValueText)
+		{
+			ValueText->SetText(FText::GetEmpty());
+		}
 		return;
 	}
 
@@ -61,4 +82,8 @@ void UAttributeBar::RefreshBar() const
 	const float MaxValue = ASC->GetNumericAttribute(MaxAttribute);
 	const float Percent = MaxValue > 0.f ? FMath::Clamp(CurrentValue / MaxValue, 0.f, 1.f) : 0.f;
 	Bar->SetPercent(Percent);
+	if (bShouldUpdateValueText)
+	{
+		ValueText->SetText(FText::Format(NSLOCTEXT("AttributeBar", "CurrentAndMax", "{0} / {1}"), FText::AsNumber(CurrentValue), FText::AsNumber(MaxValue)));
+	}
 }

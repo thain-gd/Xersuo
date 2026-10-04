@@ -10,6 +10,7 @@
 class UNormalAttackConfig;
 class UAbilitySystemComponent;
 class UHealthAttributeSet;
+class UResourceAttributeSet;
 class UBaseStatsAttributeSet;
 
 /** Owns the champion's ability system so it persists across pawn respawns. */
@@ -38,6 +39,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UHealthAttributeSet> HealthAttributeSet;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UResourceAttributeSet> ResourceAttributeSet;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBaseStatsAttributeSet> BaseStatsAttributeSet;

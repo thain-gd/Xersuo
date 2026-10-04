@@ -7,6 +7,7 @@
 
 class UAbilitySystemComponent;
 class UProgressBar;
+class UTextBlock;
 struct FOnAttributeChangeData;
 
 UCLASS(Abstract)
@@ -20,6 +21,7 @@ public:
 	void SetAbilitySystemComponent(UAbilitySystemComponent* InAbilitySystemComponent);
 
 protected:
+	virtual void NativePreConstruct() override;
 	virtual void NativeDestruct() override;
 
 	UPROPERTY(EditAnywhere, Category = "Attributes")
@@ -27,6 +29,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attributes")
 	FGameplayAttribute MaxAttribute;
+	
+	UPROPERTY(EditAnywhere, Category = "Attributes")
+	FLinearColor FillColor = FColor::White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
+	bool bShowValueText = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes", meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> ValueText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes", meta = (BindWidget))
 	TObjectPtr<UProgressBar> Bar;

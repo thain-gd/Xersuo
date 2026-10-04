@@ -9,6 +9,7 @@ UHealthAttributeSet::UHealthAttributeSet()
 {
 	InitMaxHealth(100.f);
 	InitHealth(100.f);
+	InitHealthGenPer5Seconds(0.f);
 }
 
 void UHealthAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -17,6 +18,7 @@ void UHealthAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UHealthAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UHealthAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UHealthAttributeSet, HealthGenPer5Seconds, COND_None, REPNOTIFY_Always);
 }
 
 void UHealthAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -60,3 +62,7 @@ void UHealthAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHe
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UHealthAttributeSet, MaxHealth, OldMaxHealth);
 }
 
+void UHealthAttributeSet::OnRep_HealthGenPer5Seconds(const FGameplayAttributeData& OldHealthGenPer5Seconds)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UHealthAttributeSet, HealthGenPer5Seconds, OldHealthGenPer5Seconds);
+}

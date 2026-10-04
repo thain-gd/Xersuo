@@ -31,10 +31,18 @@ public:
 
 	ATTRIBUTE_ACCESSORS_BASIC(UHealthAttributeSet, MaxHealth)
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthGenPer5Seconds, Category = "Attributes|Health")
+	FGameplayAttributeData HealthGenPer5Seconds;
+
+	ATTRIBUTE_ACCESSORS_BASIC(UHealthAttributeSet, HealthGenPer5Seconds)
+
 protected:
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth);
 
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
+
+	UFUNCTION()
+	void OnRep_HealthGenPer5Seconds(const FGameplayAttributeData& OldHealthGenPer5Seconds);
 };

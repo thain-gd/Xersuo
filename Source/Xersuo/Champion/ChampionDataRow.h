@@ -24,6 +24,15 @@ public:
 	FChampionBaseStat MaxHealth;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FChampionBaseStat HealthGenPer5Seconds;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FChampionBaseStat MaxResource;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FChampionBaseStat ResourceGenPer5Seconds;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FChampionBaseStat AttackDamage;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

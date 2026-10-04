@@ -3,6 +3,7 @@
 #include "XersuoPlayerState.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AttributeSets/HealthAttributeSet.h"
+#include "AbilitySystem/AttributeSets/ResourceAttributeSet.h"
 #include "AbilitySystem/AttributeSets/BaseStatsAttributeSet.h"
 #include "Champion/ChampionDataRow.h"
 #include "Champion/NormalAttackConfig.h"
@@ -17,6 +18,7 @@ AXersuoPlayerState::AXersuoPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	HealthAttributeSet = CreateDefaultSubobject<UHealthAttributeSet>(TEXT("HealthAttributeSet"));
+	ResourceAttributeSet = CreateDefaultSubobject<UResourceAttributeSet>(TEXT("ResourceAttributeSet"));
 	BaseStatsAttributeSet = CreateDefaultSubobject<UBaseStatsAttributeSet>(TEXT("BaseStatsAttributeSet"));
 	
 	SetNetUpdateFrequency(30.f);
@@ -53,9 +55,17 @@ void AXersuoPlayerState::InitializeChampionData()
 
 	bChampionDataInitialized = true;
 	NormalAttackConfig = ChampionData->NormalAttackConfig;
+	
 	const float StartingHealth = ChampionData->MaxHealth.BaseValue;
 	HealthAttributeSet->SetMaxHealth(StartingHealth);
 	HealthAttributeSet->SetHealth(StartingHealth);
+	HealthAttributeSet->SetHealthGenPer5Seconds(ChampionData->HealthGenPer5Seconds.BaseValue);
+	
+	const float StartingResource = ChampionData->MaxResource.BaseValue;
+	ResourceAttributeSet->SetMaxResource(StartingResource);
+	ResourceAttributeSet->SetResource(StartingResource);
+	ResourceAttributeSet->SetResourceGenPer5Seconds(ChampionData->ResourceGenPer5Seconds.BaseValue);
+	
 	BaseStatsAttributeSet->SetAttackDamage(ChampionData->AttackDamage.BaseValue);
 	ForceNetUpdate();
 }

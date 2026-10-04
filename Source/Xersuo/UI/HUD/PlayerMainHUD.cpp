@@ -10,5 +10,6 @@ void UPlayerMainHUD::SetAbilitySystemComponent(UAbilitySystemComponent* InAbilit
 	}
 
 	HealthBar->SetAbilitySystemComponent(InAbilitySystemComponent);
+	ResourceBar->SetAbilitySystemComponent(InAbilitySystemComponent);
 	bAttributesInitialized = true;
 }

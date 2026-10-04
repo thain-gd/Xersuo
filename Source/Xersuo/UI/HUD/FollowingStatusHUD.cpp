@@ -13,5 +13,5 @@ void UFollowingStatusHUD::SetAbilitySystemComponent(UAbilitySystemComponent* InA
 	}
 
 	HealthBar->SetAbilitySystemComponent(InAbilitySystemComponent);
-	// EnergyBar->SetAbilitySystemComponent(InAbilitySystemComponent);
+	ResourceBar->SetAbilitySystemComponent(InAbilitySystemComponent);
 }

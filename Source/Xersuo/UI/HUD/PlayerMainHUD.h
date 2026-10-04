@@ -26,6 +26,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "HUD", meta = (BindWidget))
 	TObjectPtr<UAttributeBar> HealthBar;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "HUD", meta = (BindWidget))
+	TObjectPtr<UAttributeBar> ResourceBar;
 
 private:
 	bool bAttributesInitialized = false;

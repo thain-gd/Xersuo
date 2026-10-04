@@ -33,5 +33,5 @@ protected:
 	TObjectPtr<UAttributeBar> HealthBar;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Status", meta = (BindWidget))
-	TObjectPtr<UAttributeBar> EnergyBar;
+	TObjectPtr<UAttributeBar> ResourceBar;
 };
