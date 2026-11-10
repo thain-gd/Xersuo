@@ -24,8 +24,8 @@
 UNormalAttack::UNormalAttack()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::ServerInitiated;
-	NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::ServerOnly;
+	NetExecutionPolicy = EGameplayAbilityNetExecutionPolicy::LocalPredicted;
+	NetSecurityPolicy = EGameplayAbilityNetSecurityPolicy::ClientOrServer;
 }
 
 void UNormalAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
